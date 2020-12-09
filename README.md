@@ -4,14 +4,24 @@
 </div>
 
 ## Usage
+Basic:
+```yml
+- uses: PsychoLlama/vader-action@v1
+```
+
+Overriding the test glob:
 ```yml
 - uses: PsychoLlama/vader-action@v1
   with:
-    # Use a custom glob pattern to find test files.
-    # Default: all `.vader` files.
+    # Default: runs all files with the `.vader` extension.
     test-pattern: '**/*.vader'
+```
 
-    # Run tests with neovim instead. Note: neovim must be installed for this to work.
-    # Default: false
+Running tests with neovim:
+```yml
+- uses: PsychoLlama/vader-action@v1
+  with:
+    # Note: neovim must be installed before enabling this feature.
+    # Installation is easy with the excellent `rhysd/action-setup-vim` action.
     neovim: true
 ```
