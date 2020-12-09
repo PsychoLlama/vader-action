@@ -17,3 +17,5 @@ jobs:
         with:
           neovim: ${{ matrix.editor == 'neovim' }}
       - uses: ./
+        with:
+          neovim: ${{ matrix.editor == 'neovim' }}

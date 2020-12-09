@@ -10,4 +10,8 @@
     # Use a custom glob pattern to find test files.
     # Default: all `.vader` files.
     test-pattern: '**/*.vader'
+
+    # Run tests with neovim instead. Note: neovim must be installed for this to work.
+    # Default: false
+    neovim: true
 ```

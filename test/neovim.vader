@@ -1,0 +1,2 @@
+Execute (ensure the correct editor is used):
+  AssertEqual $USE_NEOVIM ==# 'true', has('nvim')

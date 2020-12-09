@@ -11,6 +11,10 @@ inputs:
     description: 'A glob which points to your vader test files.'
     required: false
     default: '**/*.vader'
+  neovim:
+    description: 'Use neovim instead of vim'
+    required: false
+    default: false
 
 runs:
   using: composite
@@ -20,3 +24,4 @@ runs:
       run: $GITHUB_ACTION_PATH/run-vader
       env:
         TEST_PATTERN: ${{ inputs.test-pattern }}
+        USE_NEOVIM: ${{ inputs.neovim }}

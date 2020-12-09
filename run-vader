@@ -14,6 +14,11 @@ set rtp+=$plugin_path/after
 filetype plugin indent on
 "
 
+editor=vim
+if [[ ! "$USE_NEOVIM" == false ]]; then
+  editor=nvim
+fi
+
 # Running in silent Ex mode avoids garbled log output.
 # Unfortunately color isn't supported without an interactive vim frontend.
-vim -Es -Nu <(echo "$vimrc") -c "Vader! $TEST_PATTERN"
+"$editor" -Es -Nu <(echo "$vimrc") -c "Vader! $TEST_PATTERN"

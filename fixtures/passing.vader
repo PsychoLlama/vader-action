@@ -1,2 +1,0 @@
-Execute (pass the test):
-  AssertEqual v:true, v:true
