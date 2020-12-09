@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>action-vader</h1>
+  <h1>vader-action</h1>
   <p>Test your vim plugin with <a href="https://github.com/junegunn/vader.vim/">vader</a>.</p>
 </div>
 
