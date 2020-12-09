@@ -1,0 +1,15 @@
+name: 'Test with Vader'
+description: 'Test your vim plugin with vader.vim'
+author: PsychoLlama
+
+inputs:
+
+runs:
+  using: composite
+  steps:
+    - run: 'echo todo'
+      shell: bash
+
+branding:
+  icon: check-circle
+  color: green
