@@ -2,14 +2,21 @@ name: 'Test with Vader'
 description: 'Test your vim plugin with vader.vim'
 author: PsychoLlama
 
+branding:
+  icon: check-circle
+  color: green
+
 inputs:
+  test-pattern:
+    description: 'A glob which points to your vader test files.'
+    required: false
+    default: '**/*.vader'
 
 runs:
   using: composite
   steps:
-    - run: 'echo todo'
+    - name: Test with Vader
       shell: bash
-
-branding:
-  icon: check-circle
-  color: green
+      run: $GITHUB_ACTION_PATH/run-vader
+      env:
+        TEST_PATTERN: ${{ inputs.test-pattern }}

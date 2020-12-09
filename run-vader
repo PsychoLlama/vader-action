@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e
+
+vader_path="${GITHUB_ACTION_PATH}.vader.vim"
+plugin_path="$GITHUB_WORKSPACE"
+
+git clone --depth=1 'https://github.com/junegunn/vader.vim.git' "$vader_path"
+
+vimrc="
+filetype off
+set rtp+=$vader_path
+set rtp+=$plugin_path
+set rtp+=$plugin_path/after
+filetype plugin indent on
+"
+
+# Running in silent Ex mode avoids garbled log output.
+# Unfortunately color isn't supported without an interactive vim frontend.
+vim -Es -Nu <(echo "$vimrc") -c "Vader! $TEST_PATTERN"
