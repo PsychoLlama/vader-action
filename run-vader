@@ -6,7 +6,7 @@ vim_runtime_path="$vader_path"
 plugin_post_hooks=
 
 # Dynamically generate the vim runtime path from user input. Typically this is
-# the parent repository, but it could be multiple plugins or plugin globs.
+# the parent repository, but it could be multiple plugins or globs.
 old_ifs="$IFS"; IFS=','
 for plugin in $PLUGIN_PATHS; do
   vim_runtime_path+=",$plugin"

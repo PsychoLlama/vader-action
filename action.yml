@@ -16,7 +16,7 @@ inputs:
     required: false
     default: false
   plugins:
-    description: 'A comma-separated list of plugins to install first.'
+    description: 'A comma-separated list of plugins to install.'
     required: false
     default: $GITHUB_WORKSPACE
 
