@@ -2,7 +2,20 @@
 set -euo pipefail
 
 vader_path="${GITHUB_ACTION_PATH:-/tmp/}.vader.vim"
-plugin_path="${GITHUB_WORKSPACE:-.}"
+vim_runtime_path="$vader_path"
+
+# Dynamically generate the vim runtime path from user input. Typically this is
+# the parent repository, but it could be multiple plugins or plugin globs.
+for plugin in $PLUGIN_PATHS; do
+  vim_runtime_path+=",$plugin"
+done
+
+# Obligatory check for "/after" plugins (see `:help after-directory`)
+for plugin in $PLUGIN_PATHS; do
+  if [[ -d "$plugin/after" ]]; then
+    vim_runtime_path+=",$plugin/after"
+  fi
+done
 
 # For local testing: don't try to clone the repo twice.
 if [[ ! -d "$vader_path" ]]; then
@@ -11,58 +24,7 @@ fi
 
 vimrc="
 filetype off
-set rtp+=$vader_path
-
-$(echo -n "${PLUGIN_PATHS:-}" | awk '
-# Progressively build out a runtime path for vim.
-function append_plugin(plugin_file_path) {
-  if (system("test -d " plugin_file_path) != 0) {
-    print "Error: not a directory: " plugin_file_path >> "/dev/stderr"
-    close("/dev/stderr")
-    abort = 1
-  }
-
-  if (length(runtime_path) > 0) {
-    runtime_path = runtime_path ","
-  }
-
-  runtime_path = runtime_path plugin_file_path
-  plugins[plugin_index++] = plugin_file_path
-  has_plugins = 1
-}
-
-BEGIN {
-  RS="," # Split file paths by comma.
-  runtime_path = ""
-  plugin_index = 0
-  has_plugins = 0
-  abort = 0
-}
-
-{
-  append_plugin($0)
-}
-
-END {
-  if (abort) {
-    exit 1
-  }
-
-  for (idx in plugins) {
-    plugin_after_hook = plugins[idx] "/after"
-
-    if (system("test -d " plugin_after_hook) == 0) {
-      append_plugin(plugin_after_hook)
-    }
-  }
-
-  # Output a vim command to update the plugin path.
-  if (has_plugins) {
-    print "set runtimepath+=" runtime_path
-  }
-}
-')
-
+set runtimepath+=$vim_runtime_path
 filetype plugin indent on
 "
 

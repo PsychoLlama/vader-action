@@ -31,5 +31,5 @@ Registering extra plugins:
 - uses: PsychoLlama/vader-action@v1
   with:
     # Default: the current repository.
-    plugins: 'path/to/plugin-1,path/to/plugin-2,path/to/plugin-3'
+    plugins: 'path/to/plugin,other-plugins/*.vim'
 ```
