@@ -25,3 +25,11 @@ Running tests with neovim:
     # Installation is easy with the excellent `rhysd/action-setup-vim` action.
     neovim: true
 ```
+
+Registering extra plugins:
+```yml
+- uses: PsychoLlama/vader-action@v1
+  with:
+    # Default: the current repository.
+    plugins: 'path/to/plugin-1,path/to/plugin-2,path/to/plugin-3'
+```

@@ -19,6 +19,8 @@ if [[ ! "$USE_NEOVIM" == false ]]; then
   editor=nvim
 fi
 
+echo "Paths: ${PLUGIN_PATHS[*]}"
+
 # Running in silent Ex mode avoids garbled log output.
 # Unfortunately color isn't supported without an interactive vim frontend.
 "$editor" -Es -Nu <(echo "$vimrc") -c "Vader! $TEST_PATTERN"

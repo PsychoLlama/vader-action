@@ -12,9 +12,13 @@ inputs:
     required: false
     default: '**/*.vader'
   neovim:
-    description: 'Use neovim instead of vim'
+    description: 'Use neovim instead of vim.'
     required: false
     default: false
+  plugins:
+    description: 'A comma-separated list of plugins to install first.'
+    required: false
+    default: $GITHUB_WORKSPACE
 
 runs:
   using: composite
@@ -25,3 +29,4 @@ runs:
       env:
         TEST_PATTERN: ${{ inputs.test-pattern }}
         USE_NEOVIM: ${{ inputs.neovim }}
+        PLUGIN_PATHS: ${{ inputs.plugins }}

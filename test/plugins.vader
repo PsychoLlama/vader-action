@@ -1,0 +1,3 @@
+Execute (ensure plugins loaded):
+  AssertEqual 'Plugin loaded', hello#()
+  AssertEqual 5, math#sum(2, 3)
