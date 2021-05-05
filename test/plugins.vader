@@ -1,3 +1,6 @@
 Execute (ensure plugins loaded):
-  AssertEqual 'Plugin loaded', hello#()
-  AssertEqual 5, math#sum(2, 3)
+  AssertEqual hello#(), 'Plugin loaded'
+  AssertEqual math#sum(2, 3), 5
+
+Execute (ensure post plugins loaded):
+  AssertEqual has_key(g:, 'loaded_post_plugins'), 1

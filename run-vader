@@ -1,25 +1,75 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-vader_path="${GITHUB_ACTION_PATH}.vader.vim"
-plugin_path="$GITHUB_WORKSPACE"
+vader_path="${GITHUB_ACTION_PATH:-/tmp/}.vader.vim"
+plugin_path="${GITHUB_WORKSPACE:-.}"
 
-git clone --depth=1 'https://github.com/junegunn/vader.vim.git' "$vader_path"
+# For local testing: don't try to clone the repo twice.
+if [[ ! -d "$vader_path" ]]; then
+  git clone --depth=1 'https://github.com/junegunn/vader.vim.git' "$vader_path"
+fi
 
 vimrc="
 filetype off
 set rtp+=$vader_path
-set rtp+=$plugin_path
-set rtp+=$plugin_path/after
+
+$(echo -n "${PLUGIN_PATHS:-}" | awk '
+# Progressively build out a runtime path for vim.
+function append_plugin(plugin_file_path) {
+  if (system("test -d " plugin_file_path) != 0) {
+    print "Error: not a directory: " plugin_file_path >> "/dev/stderr"
+    close("/dev/stderr")
+    abort = 1
+  }
+
+  if (length(runtime_path) > 0) {
+    runtime_path = runtime_path ","
+  }
+
+  runtime_path = runtime_path plugin_file_path
+  plugins[plugin_index++] = plugin_file_path
+  has_plugins = 1
+}
+
+BEGIN {
+  RS="," # Split file paths by comma.
+  runtime_path = ""
+  plugin_index = 0
+  has_plugins = 0
+  abort = 0
+}
+
+{
+  append_plugin($0)
+}
+
+END {
+  if (abort) {
+    exit 1
+  }
+
+  for (idx in plugins) {
+    plugin_after_hook = plugins[idx] "/after"
+
+    if (system("test -d " plugin_after_hook) == 0) {
+      append_plugin(plugin_after_hook)
+    }
+  }
+
+  # Output a vim command to update the plugin path.
+  if (has_plugins) {
+    print "set runtimepath+=" runtime_path
+  }
+}
+')
+
 filetype plugin indent on
 "
 
 editor=vim
-if [[ ! "$USE_NEOVIM" == false ]]; then
+if [[ ! "${USE_NEOVIM:-}" == false ]]; then
   editor=nvim
 fi
-
-echo "Paths: ${PLUGIN_PATHS[*]}"
 
 # Running in silent Ex mode avoids garbled log output.
 # Unfortunately color isn't supported without an interactive vim frontend.
