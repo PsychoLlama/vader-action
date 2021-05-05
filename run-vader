@@ -3,19 +3,20 @@ set -euo pipefail
 
 vader_path="${GITHUB_ACTION_PATH:-/tmp/}.vader.vim"
 vim_runtime_path="$vader_path"
+plugin_post_hooks=
 
 # Dynamically generate the vim runtime path from user input. Typically this is
 # the parent repository, but it could be multiple plugins or plugin globs.
+old_ifs="$IFS"; IFS=','
 for plugin in $PLUGIN_PATHS; do
   vim_runtime_path+=",$plugin"
-done
 
-# Obligatory check for "/after" plugins (see `:help after-directory`)
-for plugin in $PLUGIN_PATHS; do
+  # Obligatory check for "/after" plugins (see `:help after-directory`)
   if [[ -d "$plugin/after" ]]; then
-    vim_runtime_path+=",$plugin/after"
+    plugin_post_hooks+=",$plugin/after"
   fi
 done
+IFS="$old_ifs"
 
 # For local testing: don't try to clone the repo twice.
 if [[ ! -d "$vader_path" ]]; then
@@ -24,7 +25,7 @@ fi
 
 vimrc="
 filetype off
-set runtimepath+=$vim_runtime_path
+set runtimepath+=${vim_runtime_path}${plugin_post_hooks}
 filetype plugin indent on
 "
 
