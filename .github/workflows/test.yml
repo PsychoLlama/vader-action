@@ -16,3 +16,4 @@ jobs:
       - uses: ./
         with:
           neovim: ${{ matrix.editor == 'neovim' }}
+          plugins: './test/fixtures/*.vim,./'
